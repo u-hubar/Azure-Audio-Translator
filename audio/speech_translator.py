@@ -2,17 +2,20 @@ import azure.cognitiveservices.speech as speechsdk
 
 
 class SpeechTranslator:
-    def __init__(self, audio_lang: str, target_lang: str, subscription_key: str, region: str):
-        self.audio_lang = audio_lang
-        self.target_lang = target_lang
+    def __init__(self, subscription_key: str, region: str):
         self.config = speechsdk.translation.SpeechTranslationConfig(
             subscription=subscription_key,
             region=region,
-            speech_recognition_language=self.audio_lang,
-            target_languages=(self.target_lang,),
         )
 
-    def translate_audio(self, filename: str):
+    def translate_audio(self, filename: str, audio_lang: str, target_lang: str) -> str:
+        self.audio_lang = audio_lang
+        self.target_lang = target_lang
+
+        self.config.speech_recognition_language = self.audio_lang
+        if self.target_lang not in self.config.target_languages:
+            self.config.add_target_language(self.target_lang)
+
         audio_config = speechsdk.AudioConfig(filename=filename)
 
         recognizer = speechsdk.translation.TranslationRecognizer(
@@ -34,7 +37,7 @@ class SpeechTranslator:
         result: speechsdk.translation.TranslationRecognitionResult,
     ) -> str:
         reason_format = {
-            speechsdk.ResultReason.TranslatedSpeech: f"{result.translations[self.target_lang]}",
+            speechsdk.ResultReason.TranslatedSpeech: result.translations[self.target_lang] if self.target_lang in result.translations.keys() else "Target language is not available for this audio",
             speechsdk.ResultReason.RecognizedSpeech: f'Recognized: "{result.text}"',
             speechsdk.ResultReason.NoMatch: f"No speech could be recognized: {result.no_match_details}",
             speechsdk.ResultReason.Canceled: f"Speech Recognition canceled: {result.cancellation_details}",
