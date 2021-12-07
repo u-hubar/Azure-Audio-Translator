@@ -10,7 +10,7 @@ from utils.config import (
 
 
 speech_translator = SpeechTranslator(
-    subscription_key=CS_SUBSCRIPTION_KEY, region=CS_REGION, audio_lang="en-US", target_lang="pl"
+    subscription_key=CS_SUBSCRIPTION_KEY, region=CS_REGION
 )
 blob_service_client = BlobServiceClient.from_connection_string(STORAGE_CONNECTION_STRING)
 container_client = blob_service_client.get_container_client(STORAGE_CONTAINER)
@@ -22,6 +22,8 @@ def index():
     transcript = ""
 
     if request.method == "POST":
+        audio_lang, target_lang = request.form.get('language_from'), request.form.get('language_to') 
+
         file = request.files.get("file", None)
 
         if file is None:
@@ -39,7 +41,7 @@ def index():
             data = blob_client.download_blob()
             data.readinto(f)
 
-        transcript = speech_translator.translate_audio(file.filename)
+        transcript = speech_translator.translate_audio(file.filename, audio_lang, target_lang)
 
     return render_template("index.html", transcript=transcript)
 
