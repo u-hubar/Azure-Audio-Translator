@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speech Translation in Python</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}" />
+
+	<!-- Latest compiled and minified Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+<body>
+    <h1>Translate voice from english to polish</h1>
+
+    <div id="speechContainer">
+        <br>
+        <h3>Upload your .wav file</h3> 
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file"/>
+            <br>
+
+            <br>
+            <h3>Translate audio or your voice from mic if file was not uploaded </h3> 
+            <input type="submit" id="submitButton" value="Translate"/>
+        </form>
+
+        {% if transcript != "" %}
+            <div id="speechTranscriptContainer">
+                <h1>Results</h1>
+                <p id="speechText">{{ transcript }}</p>
+            </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

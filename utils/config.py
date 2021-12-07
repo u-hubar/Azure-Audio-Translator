@@ -1,0 +1,10 @@
+import os
+
+
+# Cognitive Services
+CS_SUBSCRIPTION_KEY = os.environ["CS_SUBSCRIPTION_KEY"]
+CS_REGION = os.environ["CS_REGION"]
+
+# Storage
+STORAGE_CONNECTION_STRING = os.environ["STORAGE_CONNECTION_STRING"]
+STORAGE_CONTAINER = os.environ["STORAGE_CONTAINER"]
